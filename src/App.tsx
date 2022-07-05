@@ -1,16 +1,16 @@
-import React, { useRef, useEffect } from "react";
-import init from "./game";
+import React, { useRef, useEffect } from "react"
+import init from "./game"
 
 const App = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current
     if (canvas) {
-      init(canvas);
+      init(canvas)
     }
-  }, []);
+  }, [])
 
-  return <canvas ref={canvasRef} />;
-};
-export default App;
+  return <canvas ref={canvasRef} />
+}
+export default App

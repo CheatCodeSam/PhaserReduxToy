@@ -1,10 +1,9 @@
 import { Scene } from "phaser"
 import { AppStore } from "../store/store"
 import Tile from "./Tile"
+import Unit from "./Unit"
 
 export class MainScene extends Scene {
-  block!: Phaser.GameObjects.Image
-  text!: Phaser.GameObjects.Text
   tiles!: Tile[]
   constructor(private store: AppStore) {
     super("main")
@@ -27,6 +26,8 @@ export class MainScene extends Scene {
     this.tiles = state.grid.map((c, i) => new Tile(this, c, i * 32, 0))
 
     this.tiles.forEach((c) => this.add.existing(c))
+
+    this.add.existing(new Unit(this, 1, 0, 0))
 
     this.store.subscribe(() => this.stateUpdated())
   }
