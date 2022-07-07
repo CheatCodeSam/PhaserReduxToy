@@ -4,6 +4,7 @@ import { MainScene } from "./MainScene"
 
 class Tile extends Phaser.GameObjects.Container {
   color: number
+  coordinate: [number, number]
 
   constructor(
     scene: MainScene,
@@ -13,8 +14,9 @@ class Tile extends Phaser.GameObjects.Container {
     private id: number
   ) {
     super(scene, 0)
-    this.x = x
-    this.y = y
+    this.x = x * 32
+    this.y = y * 32
+    this.coordinate = [x, y]
     this.color = color === 0 ? 0xff0000 : 0x000ff
     const rect = new Phaser.GameObjects.Rectangle(
       scene,
@@ -33,7 +35,7 @@ class Tile extends Phaser.GameObjects.Container {
       Phaser.Geom.Rectangle.Contains
     )
     this.on("pointerdown", () => {
-      scene.store.dispatch(moveUnit(id))
+      scene.store.dispatch(moveUnit(this.coordinate))
     })
   }
 
