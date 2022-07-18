@@ -5,8 +5,8 @@ import Tile from "./Tile"
 import Unit from "./Unit"
 
 const moveUnit = async (scene: MainScene, state: RootState, type: any) => {
-  scene.unit.x = state.game.unit[0] * 32
-  scene.unit.y = state.game.unit[1] * 32
+  scene.unit.x = state.game.unit.x * 32
+  scene.unit.y = state.game.unit.y * 32
 }
 
 export class MainScene extends Scene {

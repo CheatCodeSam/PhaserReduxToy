@@ -1,18 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Unit, Terrain } from "./types"
 
 interface GameState {
-  unit: [number, number]
+  unit: Unit
   grid: number[][]
   ui: { type: string }[]
 }
 
 const initialState: GameState = {
   grid: [
-    [0, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0],
     [0, 1, 0, 0, 0],
     [0, 0, 0, 0, 0]
   ],
-  unit: [0, 1],
+  unit: { movePoints: 3, x: 1, y: 0 },
   ui: []
 }
 
@@ -21,9 +22,11 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     moveUnit: (state, action: PayloadAction<[number, number]>) => {
-      state.unit = action.payload
+      state.unit.x = action.payload[0]
+      state.unit.y = action.payload[1]
       state.ui.push({ type: "unit_moved" })
     },
+    selectTile: (state, action: PayloadAction<[number, number]>) => {},
     animationDone: (state) => {
       state.ui = []
     }
