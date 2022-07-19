@@ -1,5 +1,5 @@
 import Phaser from "phaser"
-import { moveUnit } from "../features/game.slice"
+import { selectTile } from "../features/game.slice"
 import { MainScene } from "./MainScene"
 
 class Tile extends Phaser.GameObjects.Container {
@@ -35,7 +35,7 @@ class Tile extends Phaser.GameObjects.Container {
       Phaser.Geom.Rectangle.Contains
     )
     this.on("pointerdown", () => {
-      scene.store.dispatch(moveUnit(this.coordinate))
+      scene.store.dispatch(selectTile(this.coordinate))
     })
   }
 

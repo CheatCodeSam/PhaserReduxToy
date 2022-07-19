@@ -1,4 +1,5 @@
 export interface Unit {
+  id: string
   movePoints: number
   x: number
   y: number
@@ -6,5 +7,5 @@ export interface Unit {
 
 export class Terrain {
   name: "water" | "ground" = "ground"
-  unit?: Unit
+  unitId?: string
 }
