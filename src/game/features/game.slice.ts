@@ -5,7 +5,7 @@ import { UnitPathFinder } from "./UnitPathFinder"
 interface GameState {
   unit: Unit
   grid: number[][]
-  ui: { type: string }[]
+  ui: { type: string; payload?: any }[]
 }
 
 const initialState: GameState = {
@@ -18,6 +18,12 @@ const initialState: GameState = {
   ui: []
 }
 
+const indexToCoord = (index: number) => {
+  console.log(index)
+
+  return [index % 5, Math.floor(index / 5)]
+}
+
 export const gameSlice = createSlice({
   name: "game",
   initialState,
@@ -27,7 +33,14 @@ export const gameSlice = createSlice({
       state.unit.y = action.payload[1]
       const pathfinder = new UnitPathFinder(3, 5, state.unit)
       pathfinder.explore()
+      const retCost: any[] = []
+      pathfinder
+        .getCosts()
+        .forEach((value, key) =>
+          retCost.push({ coord: indexToCoord(key), cost: value })
+        )
       state.ui.push({ type: "unit_moved" })
+      state.ui.push({ type: "highlight_tiles", payload: retCost })
     },
     animationDone: (state) => {
       state.ui = []

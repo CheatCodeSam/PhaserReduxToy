@@ -9,6 +9,19 @@ const moveUnit = async (scene: MainScene, state: RootState, type: any) => {
   scene.unit.y = state.game.unit.y * 32
 }
 
+const highlight_tiles = async (
+  scene: MainScene,
+  tiles: { coord: [number, number]; cost: number }[]
+) => {
+  scene.tiles.forEach((tile) => tile.forEach((t) => t.unhighlight()))
+  tiles.forEach((tile) => {
+    const tileX = tile.coord[1]
+    const tileY = tile.coord[0]
+    console.log(tile)
+    scene.tiles[tileX][tileY]?.highlight()
+  })
+}
+
 export class MainScene extends Scene {
   tiles!: Tile[][]
   unit!: Unit
@@ -32,6 +45,8 @@ export class MainScene extends Scene {
       c.map((c, x) => new Tile(this, c, x, y, x - 1))
     )
 
+    console.log("size", this.tiles.length, this.tiles[0].length)
+
     this.tiles.forEach((c) => c.map((g) => this.add.existing(g)))
 
     this.unit = new Unit(this, 1, 0, 0)
@@ -46,7 +61,10 @@ export class MainScene extends Scene {
     if (!newState.game.ui.length) return
 
     for (const action of newState.game.ui) {
-      moveUnit(this, newState, action)
+      if (action.type === "unit_moved") moveUnit(this, newState, action)
+      else if (action.type === "highlight_tiles") {
+        highlight_tiles(this, action.payload)
+      }
     }
 
     this.store.dispatch(animationDone())

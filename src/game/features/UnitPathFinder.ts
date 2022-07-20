@@ -123,4 +123,8 @@ export class UnitPathFinder {
       }
     }
   }
+
+  getCosts() {
+    return this.costs
+  }
 }
