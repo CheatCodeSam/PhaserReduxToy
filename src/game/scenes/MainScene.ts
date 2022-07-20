@@ -44,7 +44,6 @@ export class MainScene extends Scene {
   stateUpdated() {
     const newState = this.store.getState()
     if (!newState.game.ui.length) return
-    console.log(newState.game.ui.length)
 
     for (const action of newState.game.ui) {
       moveUnit(this, newState, action)
