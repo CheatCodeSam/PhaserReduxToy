@@ -9,3 +9,5 @@ export class Terrain {
   name: "water" | "ground" = "ground"
   unitId?: string
 }
+
+export type AWMap = Number[][]

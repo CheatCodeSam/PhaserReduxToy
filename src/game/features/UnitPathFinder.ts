@@ -1,4 +1,4 @@
-import { Unit } from "./types"
+import { AWMap, Unit } from "./types"
 
 interface Node {
   coord: [number, number]
@@ -12,12 +12,14 @@ interface Node {
 export class UnitPathFinder {
   private costs: Map<number, number>
   private directions: Map<number, number>
+  private height: number
+  private width: number
 
-  constructor(
-    private height: number,
-    private width: number,
-    private readonly unit: Unit
-  ) {
+  constructor(private map: AWMap, private readonly unit: Unit) {
+    const demensions = [map.length, map[0].length]
+    this.height = demensions[0]
+    this.width = demensions[1]
+
     this.costs = new Map<number, number>()
     this.directions = new Map<number, number>()
   }
@@ -100,8 +102,7 @@ export class UnitPathFinder {
             continue
           }
         }
-
-        neighboursCosts = 1
+        neighboursCosts = this.getCostsOfTile(neighboursX, neighboursY)
         if (neighboursCosts >= 0) {
           const newCosts = neighboursCosts + currentCost
           remainingCosts = 3 - newCosts
@@ -122,6 +123,10 @@ export class UnitPathFinder {
         }
       }
     }
+  }
+
+  private getCostsOfTile(x: number, y: number) {
+    return 1
   }
 
   getCosts() {

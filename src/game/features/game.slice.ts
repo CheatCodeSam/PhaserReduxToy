@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Unit, Terrain } from "./types"
+import { Unit, Terrain, AWMap } from "./types"
 import { UnitPathFinder } from "./UnitPathFinder"
 
 interface GameState {
   unit: Unit
-  grid: number[][]
+  grid: AWMap
   ui: { type: string; payload?: any }[]
 }
 
@@ -31,7 +31,7 @@ export const gameSlice = createSlice({
     selectTile: (state, action: PayloadAction<[number, number]>) => {
       state.unit.x = action.payload[0]
       state.unit.y = action.payload[1]
-      const pathfinder = new UnitPathFinder(3, 5, state.unit)
+      const pathfinder = new UnitPathFinder(state.grid, state.unit)
       pathfinder.explore()
       const retCost: any[] = []
       pathfinder
