@@ -18,6 +18,7 @@ class Tile extends Phaser.GameObjects.Container {
   ) {
     super(scene, 0)
     this.terrain = color === 0 ? 0xff0000 : 0x000ff
+    if (color === 2) this.terrain = 0x00ff00
     this.x = x * 32
     this.y = y * 32
     this.coordinate = p(x, y)

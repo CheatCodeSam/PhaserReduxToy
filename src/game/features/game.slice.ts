@@ -10,16 +10,24 @@ interface GameState {
 
 const initialState: GameState = {
   grid: [
-    [1, 1, 1, 0, 0],
-    [0, 1, 0, 0, 1],
-    [0, 0, 0, 0, 0]
+    [1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 2, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 2, 0],
+    [0, 1, 0, 0, 1, 1, 1, 1, 2, 0],
+    [0, 0, 2, 0, 0, 1, 1, 1, 0, 0]
   ],
   unit: { id: "id", movePoints: 3, coord: p(1, 0) },
   ui: []
 }
 
-const indexToCoord = (index: number) => {
-  return p(Math.floor(index / 5), index % 5)
+const indexToCoord = (map: AWMap, index: number) => {
+  const width = map[0].length
+  return p(Math.floor(index / width), index % width)
 }
 
 export const gameSlice = createSlice({
@@ -34,7 +42,7 @@ export const gameSlice = createSlice({
       pathfinder
         .getCosts()
         .forEach((value, key) =>
-          retCost.push({ coord: indexToCoord(key), cost: value })
+          retCost.push({ coord: indexToCoord(state.grid, key), cost: value })
         )
       state.ui.push({ type: "unit_moved" })
       state.ui.push({ type: "highlight_tiles", payload: retCost })

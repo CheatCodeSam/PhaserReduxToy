@@ -126,6 +126,7 @@ export class UnitPathFinder {
 
   private getCostsOfTile(x: number, y: number) {
     if (this.map[y][x] === 1) return Infinity
+    if (this.map[y][x] === 2) return 2
     return 1
   }
 

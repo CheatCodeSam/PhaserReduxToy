@@ -18,6 +18,8 @@ const highlight_tiles = async (
   tiles.forEach((tile) => {
     const tileX = tile.coord.x
     const tileY = tile.coord.y
+    console.log(tileX, tileY)
+
     scene.tiles[tileX][tileY]?.highlight()
   })
 }
