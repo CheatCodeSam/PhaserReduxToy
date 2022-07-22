@@ -1,10 +1,11 @@
 import Phaser from "phaser"
 import { selectTile } from "../features/game.slice"
+import { createPoint as p, Point } from "../features/types"
 import { MainScene } from "./MainScene"
 
 class Tile extends Phaser.GameObjects.Container {
   color: number
-  coordinate: [number, number]
+  coordinate: Point
   terrain: number
   rect: Phaser.GameObjects.Rectangle
 
@@ -19,7 +20,7 @@ class Tile extends Phaser.GameObjects.Container {
     this.terrain = color === 0 ? 0xff0000 : 0x000ff
     this.x = x * 32
     this.y = y * 32
-    this.coordinate = [x, y]
+    this.coordinate = p(x, y)
     this.color = this.terrain
     this.rect = new Phaser.GameObjects.Rectangle(
       scene,

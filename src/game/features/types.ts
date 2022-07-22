@@ -1,13 +1,19 @@
-export interface Unit {
-  id: string
-  movePoints: number
+export interface Point {
   x: number
   y: number
 }
+export const createPoint = (x: number, y: number): Point => {
+  return { x: x, y: y }
+}
+export interface Unit {
+  id: string
+  movePoints: number
+  coord: Point
+}
 
-export class Terrain {
-  name: "water" | "ground" = "ground"
+export interface Terrain {
+  name: "water" | "ground" | "mountain"
   unitId?: string
 }
 
-export type AWMap = Number[][]
+export type AWMap = number[][]

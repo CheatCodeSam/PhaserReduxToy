@@ -1,23 +1,23 @@
 import { Scene } from "phaser"
 import { animationDone } from "../features/game.slice"
+import { Point } from "../features/types"
 import { AppStore, RootState } from "../store/store"
 import Tile from "./Tile"
 import Unit from "./Unit"
 
 const moveUnit = async (scene: MainScene, state: RootState, type: any) => {
-  scene.unit.x = state.game.unit.x * 32
-  scene.unit.y = state.game.unit.y * 32
+  scene.unit.x = state.game.unit.coord.x * 32
+  scene.unit.y = state.game.unit.coord.y * 32
 }
 
 const highlight_tiles = async (
   scene: MainScene,
-  tiles: { coord: [number, number]; cost: number }[]
+  tiles: { coord: Point; cost: number }[]
 ) => {
   scene.tiles.forEach((tile) => tile.forEach((t) => t.unhighlight()))
   tiles.forEach((tile) => {
-    const tileX = tile.coord[1]
-    const tileY = tile.coord[0]
-    console.log(tile)
+    const tileX = tile.coord.x
+    const tileY = tile.coord.y
     scene.tiles[tileX][tileY]?.highlight()
   })
 }
@@ -44,8 +44,6 @@ export class MainScene extends Scene {
     this.tiles = state.grid.map((c, y) =>
       c.map((c, x) => new Tile(this, c, x, y, x - 1))
     )
-
-    console.log("size", this.tiles.length, this.tiles[0].length)
 
     this.tiles.forEach((c) => c.map((g) => this.add.existing(g)))
 
