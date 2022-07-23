@@ -45,7 +45,7 @@ class Tile extends Phaser.GameObjects.Container {
   }
 
   highlight() {
-    this.rect.setFillStyle(0xffffff)
+    this.rect.setFillStyle(this.terrain, 0.2)
   }
 
   unhighlight() {

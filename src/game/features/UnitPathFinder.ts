@@ -11,15 +11,16 @@ interface Node {
 
 export class UnitPathFinder {
   private costs: Map<number, number>
-  private directions: Map<number, number>
   private height: number
   private width: number
 
-  constructor(private readonly map: AWMap, private readonly unit: Unit) {
+  constructor(
+    private readonly map: Readonly<AWMap>,
+    private readonly unit: Readonly<Unit>
+  ) {
     this.height = map.length
     this.width = map[0].length
     this.costs = new Map<number, number>()
-    this.directions = new Map<number, number>()
   }
 
   private getIndex(point: Point) {
@@ -130,7 +131,13 @@ export class UnitPathFinder {
     return 1
   }
 
-  getCosts() {
-    return this.costs
+  private indexToPoint(index: number) {
+    return createPoint(Math.floor(index / this.width), index % this.width)
+  }
+
+  getAvailablePoints() {
+    const retVal: Point[] = []
+    this.costs.forEach((_, key) => retVal.push(this.indexToPoint(key)))
+    return retVal
   }
 }

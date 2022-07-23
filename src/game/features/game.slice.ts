@@ -19,15 +19,10 @@ const initialState: GameState = {
     [0, 1, 0, 0, 1, 1, 1, 1, 0, 0],
     [0, 0, 0, 0, 0, 1, 1, 1, 2, 0],
     [0, 1, 0, 0, 1, 1, 1, 1, 2, 0],
-    [0, 0, 2, 0, 0, 1, 1, 1, 0, 0]
+    [0, 0, 2, 0, 0, 1, 1, 1, 0, 1]
   ],
   unit: { id: "id", movePoints: 3, coord: p(1, 0) },
   ui: []
-}
-
-const indexToCoord = (map: AWMap, index: number) => {
-  const width = map[0].length
-  return p(Math.floor(index / width), index % width)
 }
 
 export const gameSlice = createSlice({
@@ -40,10 +35,8 @@ export const gameSlice = createSlice({
       pathfinder.explore()
       const retCost: any[] = []
       pathfinder
-        .getCosts()
-        .forEach((value, key) =>
-          retCost.push({ coord: indexToCoord(state.grid, key), cost: value })
-        )
+        .getAvailablePoints()
+        .forEach((value) => retCost.push({ coord: value }))
       state.ui.push({ type: "unit_moved" })
       state.ui.push({ type: "highlight_tiles", payload: retCost })
     },
