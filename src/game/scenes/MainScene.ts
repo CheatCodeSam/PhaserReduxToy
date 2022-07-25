@@ -16,11 +16,7 @@ const highlight_tiles = async (
 ) => {
   scene.tiles.forEach((tile) => tile.forEach((t) => t.unhighlight()))
   tiles.forEach((tile) => {
-    const tileX = tile.coord.x
-    const tileY = tile.coord.y
-    console.log(tileX, tileY)
-
-    scene.tiles[tileX][tileY]?.highlight()
+    scene.tiles[tile.coord.x][tile.coord.y]?.highlight()
   })
 }
 
@@ -44,12 +40,12 @@ export class MainScene extends Scene {
     const state = this.store.getState().game
 
     this.tiles = state.grid.map((c, y) =>
-      c.map((c, x) => new Tile(this, c, x, y, x - 1))
+      c.map((c, x) => new Tile(this, c.name, x, y, x - 1))
     )
 
     this.tiles.forEach((c) => c.map((g) => this.add.existing(g)))
 
-    this.unit = new Unit(this, 1, 0, 0)
+    this.unit = new Unit(this, 1, state.unit.coord.x, state.unit.coord.y)
 
     this.add.existing(this.unit)
 

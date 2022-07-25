@@ -13,7 +13,7 @@ export interface Unit {
 
 export interface Terrain {
   name: "water" | "ground" | "mountain"
-  unitId?: string
+  unit: Unit | null
 }
 
-export type AWMap = number[][]
+export type AWMap = Terrain[][]

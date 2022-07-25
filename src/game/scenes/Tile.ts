@@ -11,14 +11,18 @@ class Tile extends Phaser.GameObjects.Container {
 
   constructor(
     scene: MainScene,
-    color: number,
+    color: string,
     x: number,
     y: number,
     private id: number
   ) {
     super(scene, 0)
-    this.terrain = color === 0 ? 0xff0000 : 0x000ff
-    if (color === 2) this.terrain = 0x00ff00
+    let num = 0
+    if (color === "ground") num = 0
+    else if (color === "water") num = 1
+    else if (color === "mountain") num = 2
+    this.terrain = num === 0 ? 0xff0000 : 0x000ff
+    if (num === 2) this.terrain = 0x00ff00
     this.x = x * 32
     this.y = y * 32
     this.coordinate = p(x, y)
