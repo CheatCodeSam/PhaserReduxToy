@@ -61,6 +61,26 @@ export const gameSlice = createSlice({
         })
         state.ui.push({ type: "highlight_tiles", payload: retCost })
       } else {
+        if (state.selectedUnit) {
+          const pathfinder = new UnitPathFinder(state.grid, state.unit)
+          pathfinder.explore()
+          const isAvailable = pathfinder.getAvailablePoints().find((val) => {
+            console.log(val)
+            console.log(action.payload)
+            return val.x === action.payload.y && val.y === action.payload.x
+          })
+          console.log(isAvailable)
+
+          if (isAvailable) {
+            state.grid[state.selectedUnit.coord.y][
+              state.selectedUnit.coord.x
+            ].unit = null
+            state.grid[action.payload.y][action.payload.x].unit = state.unit
+            state.unit.coord.x = action.payload.x
+            state.unit.coord.y = action.payload.y
+            state.ui.push({ type: "unit_moved" })
+          }
+        }
         state.selectedUnit = null
         state.ui.push({ type: "highlight_tiles", payload: [] })
       }
