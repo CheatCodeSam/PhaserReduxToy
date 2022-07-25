@@ -50,18 +50,32 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     selectTile: (state, action: PayloadAction<Point>) => {
-      state.grid[state.unit.coord.y][state.unit.coord.x].unit = null
-      state.grid[action.payload.y][action.payload.x].unit = state.unit
-      state.unit.coord = action.payload
-      state.selectedUnit = state.unit
-      const pathfinder = new UnitPathFinder(state.grid, state.unit)
-      pathfinder.explore()
-      const retCost: any[] = []
-      pathfinder
-        .getAvailablePoints()
-        .forEach((value) => retCost.push({ coord: value }))
-      state.ui.push({ type: "unit_moved" })
-      state.ui.push({ type: "highlight_tiles", payload: retCost })
+      if (state.grid[action.payload.y][action.payload.x].unit) {
+        const unitInTile = state.grid[action.payload.y][action.payload.x].unit!
+        state.selectedUnit = unitInTile
+        const pathfinder = new UnitPathFinder(state.grid, unitInTile)
+        pathfinder.explore()
+
+        const retCost = pathfinder.getAvailablePoints().map((value) => {
+          return { coord: value }
+        })
+        state.ui.push({ type: "highlight_tiles", payload: retCost })
+      } else {
+        state.selectedUnit = null
+        state.ui.push({ type: "highlight_tiles", payload: [] })
+      }
+      // state.grid[state.unit.coord.y][state.unit.coord.x].unit = null
+      // state.grid[action.payload.y][action.payload.x].unit = state.unit
+      // state.unit.coord = action.payload
+      // state.selectedUnit = state.unit
+      // const pathfinder = new UnitPathFinder(state.grid, state.unit)
+      // pathfinder.explore()
+      // const retCost: any[] = []
+      // pathfinder
+      //   .getAvailablePoints()
+      //   .forEach((value) => retCost.push({ coord: value }))
+      // state.ui.push({ type: "unit_moved" })
+      // state.ui.push({ type: "highlight_tiles", payload: retCost })
     },
     unselectUnit: (state) => {
       state.selectedUnit = null
