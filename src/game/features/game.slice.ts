@@ -7,6 +7,8 @@ const t = (terrainID: number): Terrain => {
   return { name: terrain, unit: null }
 }
 
+const myUnit: Unit = { id: "id", movePoints: 3, coord: p(0, 3) }
+
 interface GameState {
   unit: Unit
   selectedUnit: Unit | null
@@ -19,7 +21,18 @@ const initialState: GameState = {
     [t(1), t(1), t(1), t(0), t(0), t(1), t(1), t(1), t(0), t(0)],
     [t(0), t(1), t(0), t(0), t(1), t(1), t(1), t(1), t(0), t(0)],
     [t(0), t(0), t(0), t(0), t(0), t(1), t(1), t(1), t(0), t(0)],
-    [t(0), t(1), t(0), t(0), t(0), t(0), t(0), t(0), t(0), t(0)],
+    [
+      { name: "ground", unit: myUnit },
+      t(1),
+      t(0),
+      t(0),
+      t(0),
+      t(0),
+      t(0),
+      t(0),
+      t(0),
+      t(0)
+    ],
     [t(0), t(0), t(0), t(2), t(0), t(1), t(1), t(1), t(0), t(0)],
     [t(1), t(1), t(1), t(0), t(0), t(1), t(1), t(1), t(0), t(0)],
     [t(0), t(1), t(0), t(0), t(1), t(1), t(1), t(1), t(0), t(0)],
@@ -28,7 +41,7 @@ const initialState: GameState = {
     [t(0), t(0), t(2), t(0), t(0), t(1), t(1), t(1), t(0), t(1)]
   ],
   selectedUnit: null,
-  unit: { id: "id", movePoints: 3, coord: p(0, 3) },
+  unit: myUnit,
   ui: []
 }
 
@@ -37,6 +50,8 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     selectTile: (state, action: PayloadAction<Point>) => {
+      state.grid[state.unit.coord.y][state.unit.coord.x].unit = null
+      state.grid[action.payload.y][action.payload.x].unit = state.unit
       state.unit.coord = action.payload
       state.selectedUnit = state.unit
       const pathfinder = new UnitPathFinder(state.grid, state.unit)
