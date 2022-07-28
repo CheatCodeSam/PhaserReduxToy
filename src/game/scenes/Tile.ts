@@ -5,7 +5,6 @@ import { MainScene } from "./MainScene"
 
 class Tile extends Phaser.GameObjects.Container {
   color: number
-  coordinate: Point
   terrain: number
   rect: Phaser.GameObjects.Rectangle
 
@@ -14,7 +13,7 @@ class Tile extends Phaser.GameObjects.Container {
     color: string,
     x: number,
     y: number,
-    private id: number
+    public id: number
   ) {
     super(scene, 0)
     let num = 0
@@ -25,7 +24,6 @@ class Tile extends Phaser.GameObjects.Container {
     if (num === 2) this.terrain = 0x00ff00
     this.x = x * 32
     this.y = y * 32
-    this.coordinate = p(x, y)
     this.color = this.terrain
     this.rect = new Phaser.GameObjects.Rectangle(
       scene,
@@ -44,7 +42,7 @@ class Tile extends Phaser.GameObjects.Container {
       Phaser.Geom.Rectangle.Contains
     )
     this.on("pointerdown", () => {
-      scene.store.dispatch(selectTile(this.coordinate))
+      scene.store.dispatch(selectTile(this.id))
     })
   }
 

@@ -6,7 +6,6 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@reduxjs/toolkit": "1.8.3",
-    "immutable": "4.1.0",
     "phaser": "3.55.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

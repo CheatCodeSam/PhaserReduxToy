@@ -8,12 +8,12 @@ export const createPoint = (x: number, y: number): Point => {
 export interface Unit {
   id: string
   movePoints: number
-  coord: Point
+  coord: number
 }
 
 export interface Terrain {
   name: "water" | "ground" | "mountain"
-  unit: Unit | null
+  unitId: string | null
 }
 
 export type AWMap = Terrain[][]

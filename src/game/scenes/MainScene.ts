@@ -1,13 +1,14 @@
 import { Scene } from "phaser"
 import { animationDone } from "../features/game.slice"
-import { Point } from "../features/types"
+import { Point, Terrain } from "../features/types"
 import { AppStore, RootState } from "../store/store"
 import Tile from "./Tile"
 import Unit from "./Unit"
 
 const moveUnit = async (scene: MainScene, state: RootState, type: any) => {
-  scene.unit.x = state.game.unit.coord.x * 32
-  scene.unit.y = state.game.unit.coord.y * 32
+  const unitIndex = state.game.units.byId["id1"].coord!
+  scene.unit.x = (unitIndex % state.game.mapWidth) * 32
+  scene.unit.y = Math.floor(unitIndex / state.game.mapWidth) * 32
 }
 
 const highlight_tiles = async (
@@ -39,13 +40,23 @@ export class MainScene extends Scene {
 
     const state = this.store.getState().game
 
-    this.tiles = state.grid.map((c, y) =>
-      c.map((c, x) => new Tile(this, c.name, x, y, x - 1))
+    let ungroupedTiles: Terrain[][] = []
+    for (let i = 0; i < state.map.length; i += state.mapWidth) {
+      ungroupedTiles.push(state.map.slice(i, i + state.mapWidth))
+    }
+    this.tiles = ungroupedTiles.map((c, y) =>
+      c.map((c, x) => new Tile(this, c.name, x, y, x + y * state.mapWidth))
     )
 
     this.tiles.forEach((c) => c.map((g) => this.add.existing(g)))
 
-    this.unit = new Unit(this, 1, state.unit.coord.x, state.unit.coord.y)
+    const unitIndex = state.units.byId["id1"].coord!
+    this.unit = new Unit(
+      this,
+      1,
+      unitIndex % state.mapWidth,
+      Math.floor(unitIndex / state.mapWidth)
+    )
 
     this.add.existing(this.unit)
 
