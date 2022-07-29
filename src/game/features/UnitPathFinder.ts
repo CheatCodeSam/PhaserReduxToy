@@ -47,19 +47,14 @@ export class UnitPathFinder {
     })
     let neighboursIndex = this.unit.coord
     let remainingCosts: number
-    let neighboursX = -1
-    let neighboursY = -1
-    let fieldCost = -1
-    let neighboursCosts = -1
+    let neighboursCoord: Point
+    let fieldCost: number
+    let neighboursCosts: number
     while (openList.length) {
-      console.log(openList[0])
       const front = openList.shift()!
-      if (this.costs.get(front.index) !== undefined) {
-        continue
-      }
       const currentCost = front.currentCost
-      console.log(front.index)
       this.costs.set(front.index, currentCost)
+
       for (let i = 0; i < 4; i++) {
         if (i === 0) {
           if (front.coord.x + 1 < this.width) {
@@ -68,8 +63,7 @@ export class UnitPathFinder {
             if (fieldCost !== undefined) {
               continue
             }
-            neighboursX = front.coord.x + 1
-            neighboursY = front.coord.y
+            neighboursCoord = createPoint(front.coord.x + 1, front.coord.y)
           } else {
             continue
           }
@@ -80,8 +74,7 @@ export class UnitPathFinder {
             if (fieldCost !== undefined) {
               continue
             }
-            neighboursX = front.coord.x - 1
-            neighboursY = front.coord.y
+            neighboursCoord = createPoint(front.coord.x - 1, front.coord.y)
           } else {
             continue
           }
@@ -92,8 +85,7 @@ export class UnitPathFinder {
             if (fieldCost !== undefined) {
               continue
             }
-            neighboursX = front.coord.x
-            neighboursY = front.coord.y + 1
+            neighboursCoord = createPoint(front.coord.x, front.coord.y + 1)
           } else {
             continue
           }
@@ -104,28 +96,30 @@ export class UnitPathFinder {
             if (fieldCost !== undefined) {
               continue
             }
-            neighboursX = front.coord.x
-            neighboursY = front.coord.y - 1
+            neighboursCoord = createPoint(front.coord.x, front.coord.y - 1)
           } else {
             continue
           }
         }
 
-        neighboursCosts = this.getCostsOfTile(neighboursX, neighboursY)
+        neighboursCosts = this.getCostsOfTile(
+          neighboursCoord.x,
+          neighboursCoord.y
+        )
         if (neighboursCosts >= 0) {
           const newCosts = neighboursCosts + currentCost
           remainingCosts = this.unit.movePoints - newCosts
           if (remainingCosts >= 0) {
             const totalCost = newCosts + remainingCosts
             const workNode: Node = {
-              coord: createPoint(neighboursX, neighboursY),
+              coord: neighboursCoord,
               lastNode: front.coord,
               index: neighboursIndex,
               totalCost: totalCost,
               currentCost: newCosts,
               distance:
-                Math.abs(neighboursX - this.startingCoord.x) +
-                Math.abs(neighboursY - this.startingCoord.y)
+                Math.abs(neighboursCoord.x - this.startingCoord.x) +
+                Math.abs(neighboursCoord.y - this.startingCoord.y)
             }
             openList.push(workNode)
           }
@@ -135,18 +129,14 @@ export class UnitPathFinder {
   }
 
   private getCostsOfTile(x: number, y: number) {
-    console.log("x", x, "y", y)
-
     if (this.map[y][x].name === "water") return Infinity
     if (this.map[y][x].name === "mountain") return 2
     return 1
   }
 
-  private indexToPoint(index: number) {
-    return createPoint(Math.floor(index / this.width), index % this.width)
-  }
-
   getAvailablePoints() {
+    console.log(this.costs)
+
     return this.costs as Readonly<typeof this.costs>
   }
 }
