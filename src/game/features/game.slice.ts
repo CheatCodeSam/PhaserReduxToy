@@ -41,10 +41,26 @@ export const gameSlice = createSlice({
   reducers: {
     selectTile: (state, action: PayloadAction<number>) => {
       console.log(action.payload)
-      state.map[state.units.byId["id1"].coord].unitId = null
+      const unit = state.units.byId["id1"]
+      state.map[unit.coord].unitId = null
       state.units.byId["id1"].coord = action.payload
-      state.map[state.units.byId["id1"].coord].unitId = "id1"
+      state.map[unit.coord].unitId = "id1"
+
+      const ungroupedTiles: Terrain[][] = []
+      for (let i = 0; i < state.map.length; i += state.mapWidth) {
+        ungroupedTiles.push(state.map.slice(i, i + state.mapWidth))
+      }
+      console.log(ungroupedTiles)
+
+      const pathfinder = new UnitPathFinder(ungroupedTiles, unit)
+      pathfinder.explore()
+
+      const retCost: number[] = []
+      pathfinder.getAvailablePoints().forEach((value, key) => retCost.push(key))
+      console.log(retCost)
+
       state.ui.push({ type: "unit_moved" })
+      state.ui.push({ type: "highlight_tiles", payload: retCost })
     },
     unselectUnit: (state) => {
       state.selectedUnit = null

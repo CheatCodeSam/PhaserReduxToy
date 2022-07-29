@@ -13,6 +13,7 @@ export class UnitPathFinder {
   private costs: Map<number, number>
   private height: number
   private width: number
+  startingCoord: Point
 
   constructor(
     private readonly map: Readonly<AWMap>,
@@ -20,6 +21,12 @@ export class UnitPathFinder {
   ) {
     this.height = map.length
     this.width = map[0].length
+    console.log(this.map[0][0])
+
+    this.startingCoord = createPoint(
+      unit.coord % this.width,
+      Math.floor(unit.coord / this.width)
+    )
     this.costs = new Map<number, number>()
   }
 
@@ -28,28 +35,30 @@ export class UnitPathFinder {
   }
 
   explore() {
-    const index = this.getIndex(this.unit.coord)
+    const index = this.getIndex(this.startingCoord)
     const openList: Node[] = []
     openList.push({
-      coord: this.unit.coord,
-      lastNode: this.unit.coord,
+      coord: this.startingCoord,
+      lastNode: this.startingCoord,
       index,
       totalCost: 0,
       currentCost: 0,
       distance: 0
     })
-    let neighboursIndex = this.getIndex(this.unit.coord)
+    let neighboursIndex = this.unit.coord
     let remainingCosts: number
     let neighboursX = -1
     let neighboursY = -1
     let fieldCost = -1
     let neighboursCosts = -1
     while (openList.length) {
+      console.log(openList[0])
       const front = openList.shift()!
       if (this.costs.get(front.index) !== undefined) {
         continue
       }
       const currentCost = front.currentCost
+      console.log(front.index)
       this.costs.set(front.index, currentCost)
       for (let i = 0; i < 4; i++) {
         if (i === 0) {
@@ -115,8 +124,8 @@ export class UnitPathFinder {
               totalCost: totalCost,
               currentCost: newCosts,
               distance:
-                Math.abs(neighboursX - this.unit.coord.x) +
-                Math.abs(neighboursY - this.unit.coord.y)
+                Math.abs(neighboursX - this.startingCoord.x) +
+                Math.abs(neighboursY - this.startingCoord.y)
             }
             openList.push(workNode)
           }
@@ -126,6 +135,8 @@ export class UnitPathFinder {
   }
 
   private getCostsOfTile(x: number, y: number) {
+    console.log("x", x, "y", y)
+
     if (this.map[y][x].name === "water") return Infinity
     if (this.map[y][x].name === "mountain") return 2
     return 1
@@ -136,8 +147,6 @@ export class UnitPathFinder {
   }
 
   getAvailablePoints() {
-    const retVal: Point[] = []
-    this.costs.forEach((_, key) => retVal.push(this.indexToPoint(key)))
-    return retVal
+    return this.costs as Readonly<typeof this.costs>
   }
 }

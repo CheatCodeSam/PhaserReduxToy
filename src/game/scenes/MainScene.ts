@@ -13,11 +13,14 @@ const moveUnit = async (scene: MainScene, state: RootState, type: any) => {
 
 const highlight_tiles = async (
   scene: MainScene,
-  tiles: { coord: Point; cost: number }[]
+  state: RootState,
+  tiles: number[]
 ) => {
   scene.tiles.forEach((tile) => tile.forEach((t) => t.unhighlight()))
   tiles.forEach((tile) => {
-    scene.tiles[tile.coord.x][tile.coord.y]?.highlight()
+    scene.tiles[Math.floor(tile / state.game.mapWidth)][
+      tile % state.game.mapWidth
+    ]?.highlight()
   })
 }
 
@@ -70,7 +73,7 @@ export class MainScene extends Scene {
     for (const action of newState.game.ui) {
       if (action.type === "unit_moved") moveUnit(this, newState, action)
       else if (action.type === "highlight_tiles") {
-        highlight_tiles(this, action.payload)
+        highlight_tiles(this, newState, action.payload)
       }
     }
 
